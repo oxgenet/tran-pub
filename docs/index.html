@@ -1,0 +1,323 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>tran マニュアル</title>
+<style>
+  :root {
+    --bg: #f6f6f4;
+    --panel: #ffffff;
+    --text: #1c1c1a;
+    --muted: #63635d;
+    --border: #dcdcd6;
+    --accent: #2f6fde;
+    --warn-bg: #fff6e0;
+    --warn-border: #e8c46a;
+    --code-bg: #f0f0ec;
+    color-scheme: light dark;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1b1b1a;
+      --panel: #242423;
+      --text: #ececea;
+      --muted: #a2a29c;
+      --border: #3c3c3a;
+      --accent: #78a6ff;
+      --warn-bg: #3a3220;
+      --warn-border: #8a7238;
+      --code-bg: #2e2e2c;
+    }
+  }
+  * { box-sizing: border-box; }
+  html { scroll-padding-top: 16px; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, "Hiragino Sans", "Yu Gothic UI", "Segoe UI", sans-serif;
+    font-size: 15px;
+    line-height: 1.8;
+  }
+  .layout { display: grid; grid-template-columns: 240px minmax(0, 1fr); max-width: 1120px; margin: 0 auto; gap: 32px; padding: 32px 16px 80px; }
+  nav { position: sticky; top: 16px; align-self: start; max-height: calc(100vh - 32px); overflow: auto; font-size: 14px; }
+  nav .title { font-weight: 700; font-size: 18px; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+  h1 { display: flex; align-items: center; gap: 12px; }
+  .logo { flex: none; }
+  nav ol { margin: 0; padding-left: 20px; }
+  nav li { margin: 3px 0; }
+  nav a { color: var(--text); text-decoration: none; }
+  nav a:hover { color: var(--accent); }
+  main { min-width: 0; }
+  h1 { font-size: 28px; margin: 0 0 8px; }
+  h2 { font-size: 21px; margin: 48px 0 12px; padding-top: 8px; border-top: 1px solid var(--border); }
+  h3 { font-size: 17px; margin: 28px 0 8px; }
+  p, li { max-width: 72ch; }
+  a { color: var(--accent); }
+  .lead { color: var(--muted); }
+  table { border-collapse: collapse; margin: 12px 0; width: 100%; max-width: 760px; font-size: 14px; }
+  th, td { border: 1px solid var(--border); padding: 6px 10px; text-align: left; vertical-align: top; }
+  th { background: var(--panel); }
+  code, kbd { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: 13px; background: var(--code-bg); border-radius: 4px; padding: 1px 5px; }
+  kbd { border: 1px solid var(--border); }
+  pre { background: var(--code-bg); border-radius: 6px; padding: 12px 14px; overflow-x: auto; max-width: 760px; }
+  pre code { background: none; padding: 0; }
+  ol.steps > li { margin: 6px 0; }
+  .note, .warn { max-width: 760px; border-radius: 6px; padding: 10px 14px; margin: 14px 0; }
+  .note { background: var(--panel); border: 1px solid var(--border); }
+  .warn { background: var(--warn-bg); border: 1px solid var(--warn-border); }
+  .os { display: inline-block; font-size: 12px; font-weight: 600; color: var(--muted); border: 1px solid var(--border); border-radius: 4px; padding: 0 6px; margin-right: 6px; }
+  @media (max-width: 800px) {
+    .layout { grid-template-columns: 1fr; gap: 8px; padding-top: 16px; }
+    nav { position: static; max-height: none; }
+  }
+</style>
+</head>
+<body>
+<div class="layout">
+<nav aria-label="目次">
+  <div class="title"><img src="icon.png" alt="" width="28" height="28" class="logo">tran マニュアル</div>
+  <ol>
+    <li><a href="#about">tran とは</a></li>
+    <li><a href="#install">インストールと更新</a></li>
+    <li><a href="#api-key">API キーの設定</a></li>
+    <li><a href="#basics">基本の使い方</a></li>
+    <li><a href="#keys">キー操作の一覧</a></li>
+    <li><a href="#slack">Slack と一緒に使う</a></li>
+    <li><a href="#accessibility">アクセシビリティの許可</a></li>
+    <li><a href="#reply">返信を書く</a></li>
+    <li><a href="#checks">確認項目</a></li>
+    <li><a href="#context">文脈</a></li>
+    <li><a href="#history">履歴</a></li>
+    <li><a href="#other-apps">他のアプリから使う</a></li>
+    <li><a href="#windows">Windows で使う場合</a></li>
+    <li><a href="#trouble">困ったとき</a></li>
+    <li><a href="#data">データの扱い</a></li>
+  </ol>
+</nav>
+<main>
+<h1><img src="icon.png" alt="" width="40" height="40" class="logo">tran マニュアル</h1>
+<p class="lead">このマニュアルは tran のベータ版（0.1 系）について書いています。画面やキー操作は、版によって変わる場合があります。</p>
+
+<h2 id="about">1. tran とは</h2>
+<p>tran は、日本語を話す人が英語で仕事をするときに使う、常駐型の翻訳ツールです。次の2つを、ブラウザやチャットのアプリを開かずに行うためのものです。</p>
+<ul>
+  <li>自分では英語にしにくい内容を、意図と強さが正しく伝わる英文にする。</li>
+  <li>相手が曖昧に書いた英文を、前後のやりとりを踏まえて日本語で理解し、返信を考える。</li>
+</ul>
+<p>翻訳には、利用者が契約した LLM（大規模言語モデル）の API を使います。</p>
+
+<h2 id="install">2. インストールと更新</h2>
+<h3>macOS（Homebrew）</h3>
+<p>ターミナルで、次の2つを順に実行します。</p>
+<pre><code>brew tap oxgenet/tran https://github.com/oxgenet/tran-pub
+brew install --cask oxgenet/tran/tran</code></pre>
+<p>Homebrew が「tap が信頼されていない」と表示した場合は、次を実行してから、インストールのコマンドをもう一度実行します。</p>
+<pre><code>brew trust --tap oxgenet/tran</code></pre>
+<p>新しい版に更新するときは、次を実行します。</p>
+<pre><code>brew upgrade --cask tran</code></pre>
+<p>「the latest version is already installed」と表示された場合は、すでに最新の版が入っています。</p>
+
+<h3>Windows（Scoop）</h3>
+<pre><code>scoop install https://github.com/oxgenet/tran-pub/releases/latest/download/tran.json</code></pre>
+
+<h3>直接ダウンロード</h3>
+<p><a href="https://github.com/oxgenet/tran-pub/releases">リリースの一覧</a>から、macOS は <code>.dmg</code>、Windows は <code>-setup.exe</code> のファイルをダウンロードします。macOS 版は Apple の公証を受けているので、ダウンロードしたものをそのまま開けます。</p>
+
+<h2 id="api-key">3. API キーの設定</h2>
+<p>tran は、翻訳のたびに LLM の API を呼び出します。API を呼び出すには、利用者自身の <strong>API キー</strong>が必要です。キーを登録するまで、tran は翻訳できません。</p>
+<div class="warn">
+  <strong>チャットの月額契約とは別の契約です。</strong>ChatGPT（Plus / Pro）、Claude（Pro / Max）、Gemini アプリ、Google Workspace の Gemini の月額契約には、API の利用は含まれていません。API は、各社の開発者向けのサイトで別に申し込み、使った量に応じて支払います。
+</div>
+
+<h3>3.1 プロバイダーを選ぶ</h3>
+<table>
+  <tr><th>プロバイダー</th><th>申し込む場所</th><th>支払い方</th><th>設定画面のモデル名</th></tr>
+  <tr><td>Anthropic（Claude）</td><td><a href="https://platform.claude.com/">platform.claude.com</a></td><td>前払いのクレジットから、使った量だけ引かれる</td><td>空欄でよい（既定のモデルを使う）</td></tr>
+  <tr><td>OpenAI</td><td><a href="https://platform.openai.com/">platform.openai.com</a></td><td>前払いのクレジットから、使った量だけ引かれる</td><td>使うモデルの名前を入力する（OpenAI のドキュメントに載っている名前）</td></tr>
+  <tr><td>DeepSeek</td><td><a href="https://platform.deepseek.com/">platform.deepseek.com</a></td><td>前払いの残高から、使った量だけ引かれる</td><td>空欄でよい</td></tr>
+  <tr><td>その他（OpenAI 互換）</td><td>手元で動かすモデルなど</td><td>—</td><td>モデル名と接続先の URL を入力する</td></tr>
+</table>
+<p>翻訳1回あたりの費用は小さく、数ドルの前払いで長く使えます。どのプロバイダーに何が送られるかは、<a href="#data">データの扱い</a>を読んでから選んでください。</p>
+
+<h3>3.2 API キーを作る（各社のサイト）</h3>
+<ol class="steps">
+  <li>上の表の「申し込む場所」のサイトを開き、アカウントを作ってサインインします。</li>
+  <li>支払いの画面（Billing など）で、クレジットを購入するか、残高を入金します。残高がないと、キーを作っても翻訳は失敗します。</li>
+  <li>「API Keys」の画面で、新しいキーを作ります。名前は「tran」など、分かるものにします。</li>
+  <li>作ったキーが表示されたら、すぐにコピーします。<strong>キーは作った直後の一度しか表示されません。</strong>閉じてしまった場合は、新しいキーを作り直します。</li>
+</ol>
+<p class="note">各社のサイトの画面の名前は、予告なく変わることがあります。見当たらない場合は、各社のヘルプで「API key」を検索してください。</p>
+
+<h3>3.3 tran に登録する</h3>
+<ol class="steps">
+  <li>tran のウィンドウを開き、<kbd>⌘</kbd><kbd>,</kbd>（Windows は <kbd>Ctrl</kbd><kbd>,</kbd>）を押します。設定画面が開きます。初めて起動したときは「tran へようこそ」の画面が出るので、「設定を開く」を押します。</li>
+  <li>「プロバイダー」で、キーを作った会社を選びます。</li>
+  <li>OpenAI の場合は、「モデル」に使うモデルの名前を入力します。他のプロバイダーは空欄のままで構いません。</li>
+  <li>「API キー」の欄に、コピーしたキーを貼り付けます。</li>
+  <li>「保存」を押します。</li>
+  <li>入力パネルに「こんにちは」と書いて <kbd>⌘</kbd><kbd>Enter</kbd> を押し、英訳が出れば設定は完了です。</li>
+</ol>
+<p>登録したキーは、その PC の資格情報の保管庫（macOS はキーチェーン、Windows は資格情報マネージャー）に保存されます。設定ファイルには書かれません。</p>
+
+<h2 id="basics">4. 基本の使い方</h2>
+<ol class="steps">
+  <li><kbd>Option</kbd><kbd>Shift</kbd><kbd>T</kbd>（Windows は <kbd>Alt</kbd><kbd>Shift</kbd><kbd>T</kbd>）を押すと、どのアプリを使っているときでも tran のウィンドウが開きます。もう一度押すと隠れます。</li>
+  <li>入力パネル（中央の左）に、訳したい文章を書くか貼り付けます。日本語なら英語に、英語なら日本語に訳されます。</li>
+  <li><kbd>⌘</kbd><kbd>Enter</kbd> を押すと翻訳が始まります。<kbd>Enter</kbd> だけでは翻訳されず、改行になります。日本語を変換中の <kbd>Enter</kbd> で翻訳が始まることはありません。</li>
+  <li>結果パネル（中央の右）に訳文が出ます。日本語から英語のときは「この英文の伝わり方」と別案、英語から日本語のときは「要点」「曖昧な箇所」「返信案」も出ます。</li>
+  <li><kbd>⌘</kbd><kbd>Shift</kbd><kbd>C</kbd> を押すと、訳文をコピーして tran を隠します。元のアプリで <kbd>⌘</kbd><kbd>V</kbd> で貼り付けます。</li>
+</ol>
+<p>ウィンドウの閉じるボタンを押しても、tran は終了しません。メニューバー（Windows はタスクトレイ）の tran のアイコンから「終了」を選ぶと終了します。</p>
+
+<h2 id="keys">5. キー操作の一覧</h2>
+<p>Windows では、<kbd>⌘</kbd> を <kbd>Ctrl</kbd>、<kbd>Option</kbd> を <kbd>Alt</kbd> に読み替えてください。</p>
+<table>
+  <tr><th>キー</th><th>動作</th></tr>
+  <tr><td><kbd>Option</kbd><kbd>Shift</kbd><kbd>T</kbd></td><td>tran のウィンドウを表示する／隠す（どのアプリからでも）</td></tr>
+  <tr><td><kbd>Option</kbd><kbd>Shift</kbd><kbd>R</kbd></td><td>手前の Slack のやりとりを取り込んで開く（macOS のみ）</td></tr>
+  <tr><td><kbd>⌘</kbd><kbd>Enter</kbd></td><td>翻訳する</td></tr>
+  <tr><td><kbd>Esc</kbd></td><td>翻訳の途中なら止める。そうでなければ tran を隠す</td></tr>
+  <tr><td><kbd>⌘</kbd><kbd>Shift</kbd><kbd>C</kbd></td><td>訳文をコピーして tran を隠す</td></tr>
+  <tr><td><kbd>Tab</kbd> / <kbd>Shift</kbd><kbd>Tab</kbd></td><td>次のパネル／前のパネルへ移る</td></tr>
+  <tr><td><kbd>⌘</kbd><kbd>R</kbd></td><td>返信を書く。押すたびに返信案を切り替える</td></tr>
+  <tr><td><kbd>⌘</kbd><kbd>Shift</kbd><kbd>R</kbd></td><td>取り込んだやりとりと返信先を外す</td></tr>
+  <tr><td><kbd>Ctrl</kbd><kbd>Tab</kbd> / <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>Tab</kbd></td><td>履歴を1件新しい方／古い方へ</td></tr>
+  <tr><td><kbd>⌘</kbd><kbd>1</kbd>〜<kbd>9</kbd></td><td>n 番目のサブコンテキストを選ぶ</td></tr>
+  <tr><td><kbd>⌘</kbd><kbd>0</kbd></td><td>文脈の選択を外す</td></tr>
+  <tr><td><kbd>⌘</kbd><kbd>K</kbd></td><td>文脈を検索する</td></tr>
+  <tr><td><kbd>⌘</kbd><kbd>F</kbd></td><td>履歴を検索する</td></tr>
+  <tr><td><kbd>⌘</kbd><kbd>Shift</kbd><kbd>E</kbd> / <kbd>⌘</kbd><kbd>Shift</kbd><kbd>H</kbd></td><td>文脈パネル／履歴パネルを表示する・隠す</td></tr>
+  <tr><td><kbd>⌘</kbd><kbd>,</kbd></td><td>設定を開く</td></tr>
+  <tr><td><kbd>↑</kbd> <kbd>↓</kbd> <kbd>Enter</kbd></td><td>履歴・文脈・確認項目の一覧の中で移動する／選ぶ</td></tr>
+  <tr><td><kbd>1</kbd>〜<kbd>9</kbd></td><td>確認項目の一覧で、選択肢を選ぶ</td></tr>
+  <tr><td><kbd>⌘</kbd><kbd>Z</kbd> / <kbd>⌘</kbd><kbd>Shift</kbd><kbd>Z</kbd></td><td>確認項目の選び直しを元に戻す／やり直す</td></tr>
+</table>
+
+<h2 id="slack">6. Slack と一緒に使う（macOS）</h2>
+<p>Slack のデスクトップ版から、発言を前後のやりとりと一緒に tran に渡せます。前後のやりとりを読み取るには、<a href="#accessibility">アクセシビリティの許可</a>が必要です。</p>
+
+<h3>6.1 右クリックで渡す</h3>
+<ol class="steps">
+  <li>Slack で、訳したい発言の文章をドラッグして選択します。</li>
+  <li>選択した文章の上で右クリックします。</li>
+  <li>メニューの一番下の「サービス」にマウスを合わせます。</li>
+  <li>右に開いた一覧から「tran に渡す」を選びます。</li>
+</ol>
+<p>tran のウィンドウが開き、選択した文章が入力パネルに入って、翻訳が始まります。入力パネルの上部には、「Slack / ワークスペース名 / チャンネル名」と、それより前の発言が表示されます。</p>
+
+<h3>6.2 ホットキーで渡す</h3>
+<p>Slack を手前にして <kbd>Option</kbd><kbd>Shift</kbd><kbd>R</kbd> を押すと、画面に表示されている最後の発言が入力パネルに入り、それより前の発言と一緒に翻訳されます。</p>
+
+<h3>6.3 読み取れる範囲</h3>
+<ul>
+  <li>tran が読み取るのは、Slack のウィンドウに表示されている発言だけです。古い発言を含めたいときは、Slack をスクロールして表示させてから渡します。</li>
+  <li>ボット（アプリ）の発言は、発言者と時刻が正しく取れない場合があります。</li>
+  <li>Slack の画面の作りが変わると、読み取りに失敗する場合があります。その場合も、右クリックで渡した文章だけは翻訳されます。</li>
+</ul>
+
+<h2 id="accessibility">7. アクセシビリティの許可（macOS）</h2>
+<p>Slack に表示されているやりとりを tran が読み取るには、macOS の「アクセシビリティ」の許可が必要です。許可がなくても、右クリックで渡した文章の翻訳はできます。</p>
+<div class="note">
+  <strong>許可が必要なのは1回だけです。</strong>tran を更新しても、許可はそのまま残ります。
+</div>
+
+<h3>7.1 許可を出す手順</h3>
+<ol class="steps">
+  <li>画面左上のアップルメニューから「システム設定」を開きます。</li>
+  <li>左の一覧で「プライバシーとセキュリティ」をクリックします。</li>
+  <li>右側で「アクセシビリティ」をクリックします。アプリの一覧が、アルファベット順に表示されます。</li>
+  <li>一覧に「tran」があるかを探します。</li>
+  <li><strong>tran がある場合：</strong>tran の右のスイッチをクリックして、オン（スイッチが右に寄り、色が付いた状態）にします。</li>
+  <li><strong>tran がない場合：</strong>一覧の左下にある「＋」を押します。ファイルを選ぶ画面が開いたら、左側の「アプリケーション」をクリックし、右側の「tran」を選んで「開く」を押します。一覧に tran が追加され、スイッチがオンになります。</li>
+  <li>Mac のパスワードか Touch ID を求められたら、入力します。</li>
+</ol>
+
+<h3>7.2 許可したのに読み取れない場合</h3>
+<p>一覧の tran のスイッチがオンなのに、tran が「アクセシビリティで tran を許可してください」と表示する場合は、古い許可が残っています。次の手順で入れ直します。</p>
+<ol class="steps">
+  <li>一覧で「tran」の文字を1回クリックして選びます（スイッチはクリックしません）。</li>
+  <li>一覧の左下の「−」を押します。一覧から tran が消えます。</li>
+  <li>7.1 の手順6のとおり、「＋」で tran を追加し直します。</li>
+</ol>
+
+<h2 id="reply">8. 返信を書く</h2>
+<ol class="steps">
+  <li>相手の英文を tran で訳すと、返事が必要な発言の場合は、結果パネルの最後に「返信案」が2〜3件出ます。返信案は、方向（承諾する、確認する、保留するなど）が互いに違います。</li>
+  <li><kbd>⌘</kbd><kbd>R</kbd> を押すと、相手の発言が入力パネルの上部に「返信先」として残り、返信案の1件目が入力パネルに入ります。</li>
+  <li>もう一度 <kbd>⌘</kbd><kbd>R</kbd> を押すと次の返信案に、最後は空に切り替わります。</li>
+  <li>返信案を書き換えます。〔日付〕のような印は、tran が知らない事実なので、自分で書き入れます。</li>
+  <li><kbd>⌘</kbd><kbd>Enter</kbd> を押すと、返信先とそれまでのやりとりを踏まえた英文になります。</li>
+  <li><kbd>⌘</kbd><kbd>Shift</kbd><kbd>C</kbd> でコピーし、Slack の返信欄に貼り付けます。</li>
+</ol>
+<p>返信を書き終えたら、<kbd>⌘</kbd><kbd>Shift</kbd><kbd>R</kbd> で返信先とやりとりを外します。</p>
+
+<h2 id="checks">9. 確認項目</h2>
+<p>入力に曖昧なところ（省略された主語、誤字の疑い、期限の表現など）があると、翻訳のあとに画面下の「確認項目」に質問が出ます。翻訳は、tran が選んだ解釈で先に表示されます。</p>
+<ol class="steps">
+  <li><kbd>Tab</kbd> で確認項目のパネルに移ります。</li>
+  <li><kbd>↑</kbd><kbd>↓</kbd> で質問を選び、<kbd>1</kbd>〜<kbd>9</kbd> で選択肢を選びます。マウスでクリックしても選べます。</li>
+  <li>選び直すと、その答えで自動的に翻訳し直します。<kbd>⌘</kbd><kbd>Z</kbd> で元に戻せます。</li>
+</ol>
+
+<h2 id="context">10. 文脈</h2>
+<p>文脈は、「誰と、何の話をしているか」を tran に伝えるための登録です。登録した説明は、翻訳のたびに LLM に渡され、用語や語調の選び方に使われます。</p>
+<ul>
+  <li><strong>コンテキスト</strong>：取引先やプロジェクトの単位。Slack ではワークスペースにあたります。</li>
+  <li><strong>サブコンテキスト</strong>：その中の相手・話題・チャンネル。Slack ではチャンネルにあたります。</li>
+</ul>
+<ol class="steps">
+  <li>左の文脈パネルの「＋ コンテキストを追加」を押し、名前と説明（相手との関係、用語と訳語、望ましい語調など）を書いて保存します。</li>
+  <li>コンテキストの名前を右クリックし、「サブコンテキストを追加」で同じように登録します。</li>
+  <li>使うときは、文脈パネルの項目をクリックするか、<kbd>⌘</kbd><kbd>1</kbd>〜<kbd>9</kbd> で選びます。</li>
+</ol>
+<p>コンテキストの名前を Slack のワークスペース名、サブコンテキストの名前をチャンネル名と同じにしておくと、Slack から渡したときに自動で選ばれます。</p>
+
+<h2 id="history">11. 履歴</h2>
+<ul>
+  <li>翻訳が最後まで終わると、自動で右の履歴パネルに保存されます。途中で止めた翻訳は保存されません。</li>
+  <li><kbd>Ctrl</kbd><kbd>Tab</kbd> / <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>Tab</kbd> で前後の履歴を表示し、<kbd>⌘</kbd><kbd>F</kbd> で検索できます。</li>
+  <li>入力中の文章に似た過去の翻訳は、履歴パネルの上部に「入力に近い履歴」として表示されます。</li>
+  <li>履歴の項目を右クリックすると、入力に戻して編集、結果のコピー、削除ができます。</li>
+</ul>
+
+<h2 id="other-apps">12. 他のアプリから使う</h2>
+<ul>
+  <li><strong>右クリックのメニュー</strong>：Slack 以外のアプリでも、文章を選択して右クリック →「サービス」→「tran に渡す」で、選択した文章を tran に渡せます（macOS）。</li>
+  <li><strong>ローカル API と tran コマンド</strong>：設定画面で「他のアプリからの利用を許可する」を有効にすると、この PC の中のプログラムから tran に翻訳を頼めます。既定では無効です。</li>
+</ul>
+
+<h2 id="windows">13. Windows で使う場合</h2>
+<ul>
+  <li>翻訳、確認項目、文脈、履歴、設定は、macOS と同じように使えます。キーの <kbd>⌘</kbd> は <kbd>Ctrl</kbd>、<kbd>Option</kbd> は <kbd>Alt</kbd> に読み替えます。</li>
+  <li>Slack からの読み取り（<a href="#slack">6 章</a>）と、右クリックの「tran に渡す」は、まだ対応していません。Slack の文章はコピーして tran に貼り付けてください。</li>
+</ul>
+
+<h2 id="trouble">14. 困ったとき</h2>
+<table>
+  <tr><th>症状</th><th>確かめること</th></tr>
+  <tr><td>「API キーが見つかりません」と出る</td><td><a href="#api-key">3 章</a>の手順で、設定画面にキーを登録してください。</td></tr>
+  <tr><td>「API キーが受け付けられませんでした（HTTP 401）」と出る</td><td>キーの貼り付けの誤り、またはキーの削除が考えられます。各社のサイトで新しいキーを作り、登録し直してください。</td></tr>
+  <tr><td>「利用の上限に達しました（HTTP 429）」と出る</td><td>残高の不足か、短時間に使いすぎたことが原因です。各社のサイトで残高を確かめ、少し待ってからやり直してください。</td></tr>
+  <tr><td>右クリックの「サービス」に「tran に渡す」がない</td><td>tran を一度起動してから、もう一度右クリックしてください。それでもない場合は、システム設定の「キーボード」→「キーボードショートカット」→「サービス」→「テキスト」で「tran に渡す」にチェックを入れてください。</td></tr>
+  <tr><td>Slack のやりとりが取り込まれない</td><td><a href="#accessibility">7 章</a>の許可を確かめてください。許可がある場合は、Slack のウィンドウにやりとりが表示されているかを確かめてください。</td></tr>
+  <tr><td>ホットキーが効かない</td><td>他のアプリが同じキーを使っている可能性があります。そのアプリのキーの設定を変えてください。</td></tr>
+</table>
+<p>読み取りに失敗した理由は、次のファイルに記録されます。問い合わせのときに添えてください。</p>
+<ul>
+  <li><span class="os">macOS</span><code>~/Library/Application Support/net.oxgenet.tran/tran.log</code></li>
+  <li><span class="os">Windows</span><code>%APPDATA%\net.oxgenet.tran\tran.log</code></li>
+</ul>
+
+<h2 id="data">15. データの扱い</h2>
+<ul>
+  <li>翻訳する文章、取り込んだ Slack のやりとり、登録した文脈の説明は、翻訳のたびに、設定で選んだ LLM のプロバイダーに送られます。それ以外の宛先には送られません。</li>
+  <li>プロバイダーごとに、送った内容の扱いが違います。たとえば DeepSeek では、送った内容は中国のサーバーで処理されます。取引先とのやりとりを扱う場合は、各社の利用規約と、勤め先の取り決めを確かめてからプロバイダーを選んでください。</li>
+  <li>tran は、送った内容をサービスの改善に使う無料枠（Google の Gemini の無料枠など）を案内していません。</li>
+  <li>履歴・文脈・設定は、その PC の中だけに保存されます。API キーは、その PC の資格情報の保管庫に保存されます。</li>
+</ul>
+</main>
+</div>
+</body>
+</html>
