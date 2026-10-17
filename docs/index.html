@@ -64,6 +64,7 @@
   pre { background: var(--code-bg); border-radius: 6px; padding: 12px 14px; overflow-x: auto; max-width: 760px; }
   pre code { background: none; padding: 0; }
   ol.steps > li { margin: 6px 0; }
+  img.shot { display: block; max-width: min(100%, 600px); margin: 8px 0 4px; border: 1px solid var(--border); border-radius: 6px; }
   .note, .warn { max-width: 760px; border-radius: 6px; padding: 10px 14px; margin: 14px 0; }
   .note { background: var(--panel); border: 1px solid var(--border); }
   .warn { background: var(--warn-bg); border: 1px solid var(--warn-border); }
@@ -219,6 +220,7 @@ brew install --cask oxgenet/tran/tran</code></pre>
 
 <h2 id="accessibility">7. アクセシビリティの許可（macOS）</h2>
 <p>Slack に表示されているやりとりを tran が読み取るには、macOS の「アクセシビリティ」の許可が必要です。許可がなくても、右クリックで渡した文章の翻訳はできます。</p>
+<p>許可がないまま読み取ろうとすると、tran がこの手順の案内を表示します。案内の「システム設定を開く」を押すと、手順3の画面が直接開きます。案内は、tran のメニューの「ヘルプ」→「アクセシビリティの許可の案内」からも開けます。</p>
 <div class="note">
   <strong>許可が必要なのは1回だけです。</strong>tran を更新しても、許可はそのまま残ります。
 </div>
@@ -227,10 +229,10 @@ brew install --cask oxgenet/tran/tran</code></pre>
 <ol class="steps">
   <li>画面左上のアップルメニューから「システム設定」を開きます。</li>
   <li>左の一覧で「プライバシーとセキュリティ」をクリックします。</li>
-  <li>右側で「アクセシビリティ」をクリックします。アプリの一覧が、アルファベット順に表示されます。</li>
+  <li>右側で「アクセシビリティ」をクリックします。アプリの一覧が、アルファベット順に表示されます。<br><img class="shot" src="guide/accessibility-1.png" alt="①「プライバシーとセキュリティ」と②「アクセシビリティ」の位置"></li>
   <li>一覧に「tran」があるかを探します。</li>
-  <li><strong>tran がある場合：</strong>tran の右のスイッチをクリックして、オン（スイッチが右に寄り、色が付いた状態）にします。</li>
-  <li><strong>tran がない場合：</strong>一覧の左下にある「＋」を押します。ファイルを選ぶ画面が開いたら、左側の「アプリケーション」をクリックし、右側の「tran」を選んで「開く」を押します。一覧に tran が追加され、スイッチがオンになります。</li>
+  <li><strong>tran がある場合：</strong>tran の右のスイッチをクリックして、オン（スイッチが右に寄り、青くなった状態）にします。灰色で左に寄っているのがオフです。<br><img class="shot" src="guide/accessibility-2.png" alt="③ tran の行と、オンになったスイッチ"></li>
+  <li><strong>tran がない場合：</strong>一覧の左下にある「＋」（図の④）を押します。<br><img class="shot" src="guide/accessibility-3.png" alt="④ 一覧の左下の「＋」と「−」"><br>ファイルを選ぶ画面が開いたら、左側の「アプリケーション」をクリックし、右側の「tran」を選んで「開く」を押します。一覧に tran が追加され、スイッチがオンになります。</li>
   <li>Mac のパスワードか Touch ID を求められたら、入力します。</li>
 </ol>
 
