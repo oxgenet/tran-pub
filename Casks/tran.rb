@@ -1,6 +1,6 @@
 cask "tran" do
-  version "0.1.1-alpha"
-  sha256 "91966064cc1403706a5db2ceada011940cbfcb88f64541da991182160056b5b0"
+  version "0.1.4-alpha"
+  sha256 "20e49832beb9f25e5f8612a7b07ef83844a7b4c8d0dbfa1fc7a34e7eb7c6c259"
 
   url "https://github.com/oxgenet/tran-pub/releases/download/v#{version}/tran-#{version}-macos-universal.dmg"
   name "tran"
@@ -10,10 +10,6 @@ cask "tran" do
   depends_on :macos
 
   app "tran.app"
-
-  postflight_steps do
-    run "/usr/bin/xattr", args: ["-dr", "com.apple.quarantine", "{{appdir}}/tran.app"]
-  end
 
   uninstall quit: "net.oxgenet.tran"
 
