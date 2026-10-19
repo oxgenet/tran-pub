@@ -88,6 +88,8 @@
     <li><a href="#slack">Slack と一緒に使う</a></li>
     <li><a href="#accessibility">アクセシビリティの許可</a></li>
     <li><a href="#reply">返信を書く</a></li>
+    <li><a href="#context-tray">文脈トレイ</a></li>
+    <li><a href="#browser-extension">ブラウザ拡張機能</a></li>
     <li><a href="#checks">確認項目</a></li>
     <li><a href="#context">文脈</a></li>
     <li><a href="#history">履歴</a></li>
@@ -183,7 +185,10 @@ brew install --cask oxgenet/tran/tran</code></pre>
   <tr><td><kbd>⌘</kbd><kbd>Shift</kbd><kbd>C</kbd></td><td>訳文をコピーして tran を隠す</td></tr>
   <tr><td><kbd>Tab</kbd> / <kbd>Shift</kbd><kbd>Tab</kbd></td><td>次のパネル／前のパネルへ移る</td></tr>
   <tr><td><kbd>⌘</kbd><kbd>R</kbd></td><td>返信を書く。押すたびに返信案を切り替える</td></tr>
-  <tr><td><kbd>⌘</kbd><kbd>Shift</kbd><kbd>R</kbd></td><td>取り込んだやりとりと返信先を外す</td></tr>
+  <tr><td><kbd>⌘</kbd><kbd>Shift</kbd><kbd>R</kbd></td><td>文脈トレイを空にし、返信先を外す</td></tr>
+  <tr><td><kbd>⌘</kbd><kbd>Shift</kbd><kbd>V</kbd></td><td>クリップボードの文章を文脈トレイに足す</td></tr>
+  <tr><td><kbd>Option</kbd><kbd>Shift</kbd><kbd>A</kbd></td><td>選択した文章を文脈トレイに足す（どのアプリからでも。macOS のみ）</td></tr>
+  <tr><td><kbd>I</kbd> <kbd>Space</kbd> <kbd>E</kbd> <kbd>D</kbd> <kbd>Delete</kbd></td><td>文脈トレイのカードを強調／外す・戻す／編集／ダイエット／取り除く</td></tr>
   <tr><td><kbd>Ctrl</kbd><kbd>Tab</kbd> / <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>Tab</kbd></td><td>履歴を1件新しい方／古い方へ</td></tr>
   <tr><td><kbd>⌘</kbd><kbd>1</kbd>〜<kbd>9</kbd></td><td>n 番目のサブコンテキストを選ぶ</td></tr>
   <tr><td><kbd>⌘</kbd><kbd>0</kbd></td><td>文脈の選択を外す</td></tr>
@@ -254,6 +259,63 @@ brew install --cask oxgenet/tran/tran</code></pre>
   <li><kbd>⌘</kbd><kbd>Shift</kbd><kbd>C</kbd> でコピーし、Slack の返信欄に貼り付けます。</li>
 </ol>
 <p>返信を書き終えたら、<kbd>⌘</kbd><kbd>Shift</kbd><kbd>R</kbd> で返信先とやりとりを外します。</p>
+
+<h2 id="context-tray">8A. 文脈トレイ</h2>
+<p>文脈トレイは、翻訳のたびに LLM に渡す材料（相手の発言、メモ、仕様書の抜粋など）を、1件ずつカードで並べる場所です。入力パネルの上部に表示されます。材料を集めてから翻訳すると、材料を踏まえた訳文と返信になります。</p>
+
+<h3>材料を入れる</h3>
+<table>
+  <tr><th>入れ方</th><th>操作</th></tr>
+  <tr><td>ドラッグ＆ドロップ</td><td>他のアプリで選択した文章や、テキストのファイル（.txt・.md・.eml など）を、tran のウィンドウへドラッグします。入力パネルの上半分「文脈に追加」に落とすとトレイに入り、下半分「訳す文章として入れる」に落とすと入力に入ります。</td></tr>
+  <tr><td>右クリック（macOS）</td><td>他のアプリで文章を選択して右クリック →「サービス」→「tran の文脈に追加」。tran のウィンドウは前に出ず、元のアプリで作業を続けられます。</td></tr>
+  <tr><td>ホットキー（macOS）</td><td>文章を選択して <kbd>Option</kbd><kbd>Shift</kbd><kbd>A</kbd>。右クリックと同じく、元のアプリのまま足せます。</td></tr>
+  <tr><td>ブラウザ</td><td>Web ページで選択して右クリック →「tran の文脈に追加」（<a href="#browser-extension">ブラウザ拡張機能</a>が必要）。</td></tr>
+  <tr><td>貼り付け</td><td>tran の中で <kbd>⌘</kbd><kbd>Shift</kbd><kbd>V</kbd>、またはトレイの「貼り付け」。クリップボードの文章が入ります。</td></tr>
+  <tr><td>Slack から渡す</td><td>「tran に渡す」で Slack の発言を渡すと、前のやりとりが自動でトレイに入ります。</td></tr>
+</table>
+<p>トレイに材料が入っていると、メニューバー（Windows はタスクトレイ）の tran のアイコンの横に件数が出ます。tran を前に出さずに足したときも、入ったことが分かります。</p>
+
+<h3>材料を整える</h3>
+<p>カードの右上のボタンか、トレイを選んだ状態のキーで操作します（<kbd>Tab</kbd> でトレイに移り、<kbd>↑</kbd><kbd>↓</kbd> でカードを選びます）。</p>
+<table>
+  <tr><th>ボタン</th><th>キー</th><th>動作</th></tr>
+  <tr><td>★</td><td><kbd>I</kbd></td><td>強調する。LLM に「重要」と伝え、他の材料と食い違うときに優先させます。</td></tr>
+  <tr><td>外す／戻す</td><td><kbd>Space</kbd></td><td>消さずに、今回だけ LLM に渡さないようにします。外した材料は薄く表示されます。</td></tr>
+  <tr><td>編集</td><td><kbd>E</kbd></td><td>文章を書き換える・一部を消す。全文もここで見られます。</td></tr>
+  <tr><td>ダイエット</td><td><kbd>D</kbd></td><td>LLM に要約させて短くします。事実・決まったこと・質問・数字・名前は残し、あいさつや繰り返しは落とします。</td></tr>
+  <tr><td>元に戻す</td><td>—</td><td>書き換えとダイエットの前の文章に戻します。</td></tr>
+  <tr><td>×</td><td><kbd>Delete</kbd></td><td>トレイから取り除きます。<kbd>⌘</kbd><kbd>Z</kbd> で元に戻せます。</td></tr>
+</table>
+<ul>
+  <li><strong>全体をダイエット</strong>：有効な材料をまとめて1件に要約します。元の材料は消さずに外すので、要約を消して元の材料を戻すこともできます。</li>
+  <li><strong>量の目盛り</strong>：トレイの上部に、渡す材料の文字数と目盛りが出ます。目盛りが黄色や赤になったら、ダイエットか、要らない材料を外すことを勧めます。材料が長いほど、翻訳が遅くなり、費用も増えます。</li>
+  <li><strong>文脈に保存</strong>：有効な材料を、選択中のサブコンテキストの説明に足します。毎回使う背景を、次から自動で渡せるようになります。サブコンテキストを選んでいないときは、新しいサブコンテキストの登録画面が開きます。</li>
+  <li><strong>空にする</strong>（<kbd>⌘</kbd><kbd>Shift</kbd><kbd>R</kbd>）：材料と返信先をすべて外します。</li>
+</ul>
+<p>トレイの中身は、翻訳と一緒に履歴に保存されます。履歴から開き直すと、そのときのトレイも戻ります。</p>
+
+<h2 id="browser-extension">8B. ブラウザ拡張機能（Chrome・Edge）</h2>
+<p>Web ページで選択した文章を、tran に渡せるようにする拡張機能です。Slack の Web 版では、選択した発言の前のやりとりも一緒に渡します。</p>
+<h3>入れ方</h3>
+<ol class="steps">
+  <li><a href="https://github.com/oxgenet/tran-pub/releases">リリースの一覧</a>から <code>tran-browser-extension-（版）.zip</code> をダウンロードし、ダブルクリックして展開します。展開したフォルダは、消さない場所（書類フォルダなど）に置いてください。拡張機能は、このフォルダから読み込まれます。</li>
+  <li>Chrome のアドレス欄に <code>chrome://extensions</code> と入力して開きます（Edge は <code>edge://extensions</code>）。</li>
+  <li>右上の「デベロッパーモード」をオンにします。</li>
+  <li>左上の「パッケージ化されていない拡張機能を読み込む」を押し、手順1で展開したフォルダを選びます。</li>
+  <li>ツールバーのパズルの形のアイコンを押し、「tran」の横のピンを押すと、ツールバーに tran のアイコンが出ます。</li>
+</ol>
+<h3>tran と接続する</h3>
+<ol class="steps">
+  <li>tran の設定（<kbd>⌘</kbd><kbd>,</kbd>）で「他のアプリからの利用を許可する」をオンにして、保存します。</li>
+  <li>ツールバーの tran のアイコンを押し、「tran と接続する」を押します。</li>
+  <li>tran のウィンドウに「ブラウザ拡張機能の接続」が出るので、「許可する」を押します。拡張機能の画面に「tran と接続しています」と出れば完了です。</li>
+</ol>
+<h3>使い方</h3>
+<ul>
+  <li>Web ページで文章を選択して右クリック →「tran に渡す」：tran のウィンドウで翻訳が始まります。</li>
+  <li>右クリック →「tran の文脈に追加」：tran の文脈トレイに足すだけで、tran は前に出ません。</li>
+  <li>キーでも使えます。「tran に渡す」は <kbd>Option</kbd><kbd>Shift</kbd><kbd>Y</kbd>（Windows は <kbd>Alt</kbd><kbd>Shift</kbd><kbd>Y</kbd>）。キーは <code>chrome://extensions/shortcuts</code> で変えられます。</li>
+</ul>
 
 <h2 id="checks">9. 確認項目</h2>
 <p>入力に曖昧なところ（省略された主語、誤字の疑い、期限の表現など）があると、翻訳のあとに画面下の「確認項目」に質問が出ます。翻訳は、tran が選んだ解釈で先に表示されます。</p>
