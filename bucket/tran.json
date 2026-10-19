@@ -1,12 +1,12 @@
 {
-    "version": "0.1.8-alpha",
+    "version": "0.1.9-alpha",
     "description": "Resident translation tool for working in English as a second language",
     "homepage": "https://github.com/oxgenet/tran-pub",
     "license": "Proprietary",
     "architecture": {
         "64bit": {
-            "url": "https://github.com/oxgenet/tran-pub/releases/download/v0.1.8-alpha/tran-0.1.8-alpha-windows-x64.zip",
-            "hash": "2ea0f59069d9bb78be195e9b5cc3f1c53dbf5127bc1a68bcc76f5284f0efb16e"
+            "url": "https://github.com/oxgenet/tran-pub/releases/download/v0.1.9-alpha/tran-0.1.9-alpha-windows-x64.zip",
+            "hash": "bf04a2ebb128424900cc040f02083ed9b672031c2dbe9bf8f9b55360738e1da3"
         }
     },
     "shortcuts": [

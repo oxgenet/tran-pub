@@ -1,6 +1,6 @@
 cask "tran" do
-  version "0.1.8-alpha"
-  sha256 "0dea8a949c52cf90ffc8ec6ad5f7be70c33aea96c65a2c183e2ceac99ab2d70b"
+  version "0.1.9-alpha"
+  sha256 "69bba89e66276b8ca7a6335dd8115bbbed63ca1f323a2e1a5f0e07fda383bfcf"
 
   url "https://github.com/oxgenet/tran-pub/releases/download/v#{version}/tran-#{version}-macos-universal.dmg"
   name "tran"
